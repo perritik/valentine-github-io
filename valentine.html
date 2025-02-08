@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Valentine?</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    background-color: #ffe6e6;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    color: #ff2121;
+
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #e60000;
+    transform: scale(1.1);
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+h3 {
+    font-size: 10px;
+}
+</style>
+<body>
+    <div class="container">
+        <h1>Will you be my valentine?</h1>
+        <div class="buttons">
+            <button id="yesBtn">Дооо</button>
+            <button id="noBtn">Нэт, иди нахуй</button>
+            <h3>Сделано perrritik'ом. Никакие права не защищены.</h3>
+        </div>
+        <div id="gifContainer" class="hidden">
+            <img id="responseGif" src="" alt="Response GIF">\
+            
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+<script>
+    // Получаем элементы кнопок по их ID
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const gifContainer = document.getElementById('gifContainer');
+const responseGif = document.getElementById('responseGif');
+
+// Укажите URL вашего вебхука Discord
+const webhookUrl = 'https://discord.com/api/webhooks/1337882139357614132/3sq_S8sh9Bz-uVET5Ac5J0gDfBD_lOnJW0iba7lIzzqJPWTTge6NT9M9iT0CQBhXyKWb';
+
+// Функция отправки уведомления в Discord
+function sendNotification(buttonText) {
+    const message = {
+        content: `${buttonText}`  // Используйте шаблонные строки с обратными кавычками
+    };
+
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Уведомление отправлено в Discord.');
+        } else {
+            console.error('Ошибка при отправке уведомления.');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+    });
+}
+
+// Добавляем обработчики событий 'click' к кнопкам
+noBtn.addEventListener('click', function() {
+    sendNotification(noBtn.textContent || noBtn.innerText);
+});
+
+yesBtn.addEventListener('click', function() {
+    sendNotification(yesBtn.textContent || yesBtn.innerText);
+});
+
+const noBtnTexts = [
+    'Ты точно уверена?',
+    'Может, передумаешь?',
+    'Подумай еще раз, пожалуйста',
+    'Всё-таки будешь?'
+];
+
+let clickCount = 0;
+
+// Обработчик для кнопки "Нет"
+noBtn.addEventListener('click', () => {
+    if (clickCount < noBtnTexts.length) {
+        noBtn.textContent = noBtnTexts[clickCount];
+        clickCount++;
+    } else {
+        showGif('https://media1.tenor.com/m/Q59LDPQeTiAAAAAC/last-day-of-school.gif'); // Ссылка на GIF "Хорошо"
+    }
+});
+
+// Обработчик для кнопки "Да"
+yesBtn.addEventListener('click', () => {
+    showGif('https://media1.tenor.com/m/bwcjcDvfhssAAAAC/mika-noah.gif'); // Ссылка на GIF "Отлично"
+});
+
+// Функция для отображения GIF
+function showGif(gifUrl) {
+    responseGif.src = gifUrl;
+    gifContainer.classList.remove('hidden');
+}
+
+    </script>
+</html>
